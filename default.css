@@ -1,0 +1,68 @@
+/* 对齐调查表单项目 */
+.jspsych-content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* 左对齐项目 */
+    justify-content: center;
+    height: 100vh;
+    background-color: black;
+    color: white;
+    padding: 20px; /* 添加填充以改善间距 */
+}
+
+/* 样式输入字段和选择框 */
+.jspsych-survey-html-form input[type="text"],
+.jspsych-survey-html-form input[type="number"],
+.jspsych-survey-html-form select {
+    margin: 5px 0; /* 调整间距以改善布局 */
+    padding: 8px;
+    font-size: 16px;
+    width: 100%; /* 确保输入框和选择框填充容器 */
+    box-sizing: border-box; /* 包括填充和边框在内的盒子模型 */
+}
+
+/* 样式提交按钮 */
+.jspsych-survey-html-form input[type="submit"] {
+    margin-top: 10px;
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+/* 左对齐调查表单标签 */
+.jspsych-survey-html-form p {
+    text-align: left;
+    margin: 5px 0;
+}
+
+/* 确保全页居中和样式 */
+body {
+    background-color: black;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.jspsych-content {
+    background-color: black;
+    color: white;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.jspsych-html-keyboard-response-stimulus {
+    color: white;
+    font-size: 56px;
+}
