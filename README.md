@@ -182,6 +182,73 @@ let feedback = {
         let last_trial_correct = jsPsych.data.get().last(1).values()[0].correct; // 获取上一个试次的正确性
         if(last_trial_correct){ // 如果上一个试次正确
             return '<p style="
+        { word: '<span style="color: red; font-size: 56px;">绿</span>', color: 'red', congruency: 'incongruent', word_text: '绿', block: block },
+        { word: '<span style="color: green; font-size: 56px;">红</span>', color: 'green', congruency: 'incongruent', word_text: '红', block: block },
+        { word: '<span style="color: yellow; font-size: 56px;">蓝</span>', color: 'yellow', congruency: 'incongruent', word_text: '蓝', block: block },
+        { word: '<span style="color: blue; font-size: 56px;">黄</span>', color: 'blue', congruency: 'incongruent', word_text: '黄', block: block }
+    ];
+}
+
+// 定义Stroop实验的时间线
+let stroop_timeline = {
+    timeline: [fixation, stroop_trial, feedback], // 时间线包含定位点、Stroop试次和反馈三个部分
+    timeline_variables: createTimelineVariables(current_block), // 使用当前块号生成时间线变量
+    sample: {
+        type: 'fixed-repetitions', // 固定重复类型
+        size: 5 // 每种条件重复5次
+    },
+    randomize_order: true // 随机化试次顺序
+};
+
+// 实验结束后的统计和反馈阶段
+let debrief = {
+    type: jsPsychHtmlKeyboardResponse, // 使用jsPsychHtmlKeyboardResponse类型定义结束反馈页面
+    stimulus: function() { // 设置反馈刺激的函数
+        let current_block_data = jsPsych.data.get().filter({block: current_block}); // 获取当前块的数据
+        let correct_trials = current_block_data.filter({correct: true}).count(); // 统计正确的试次数
+        let total_trials = current_block_data.count(); // 统计总试次数
+        let accuracy = correct_trials / total_trials; // 计算正确率
+
+        let debrief_message = '<p>本轮实验结束，您的正确率是 ' + (accuracy * 100).toFixed(2) + '%。</p>'; // 显示正确率
+        if (accuracy >= 0.8) { // 如果正确率高于80%
+            debrief_message += '<p>谢谢您的参与，请联系主试，并按“ESC”键退出。</p>'; // 显示感谢信息和退出提示
+        } else {
+            debrief_message += '<p>您的正确率不足80%，可能要认真点奥，请按任意键再次测验。</p>'; // 显示再次测验提示
+        }
+
+        return debrief_message; // 返回反馈信息
+    },
+    on_finish: function(data) { // 结束反馈后的操作函数
+        let current_block_data = jsPsych.data.get().filter({block: current_block}); // 获取当前块的数据
+        let correct_trials = current_block_data.filter({correct: true}).count(); // 统计正确的试次数
+        let total_trials = current_block_data.count(); // 统计总试次数
+        let accuracy = correct_trials / total_trials; // 计算正确率
+
+        if (accuracy < 0.8) { // 如果正确率低于80%
+            current_block++; // 块号加1
+            jsPsych.addNodeToEndOfTimeline(instruction); // 添加指导语到时间线末尾
+            jsPsych.addNodeToEndOfTimeline({
+                timeline: [fixation, stroop_trial, feedback], // 添加新的Stroop试次和反馈到时间线末尾
+                timeline_variables: createTimelineVariables(current_block), // 使用新的块号生成时间线变量
+                sample: {
+                    type: 'fixed-repetitions', // 固定重复类型
+                    size: 1 // 每种条件重复1次
+                },
+                randomize_order: true // 随机化试次顺序
+            });
+            jsPsych.addNodeToEndOfTimeline(debrief); // 添加结束反馈到时间线末尾
+        }
+    }
+};
+
+// 运行实验
+jsPsych.run([
+    subject_info, // 被试信息填写阶段
+    enter_fullscreen, // 进入全屏阶段
+    instruction, // 指导语阶段
+    stroop_timeline, // Stroop实验阶段
+    debrief // 结束反馈阶段
+]);
 
 ```
 
