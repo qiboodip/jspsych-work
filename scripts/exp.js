@@ -135,7 +135,7 @@ let stroop_timeline = {
     timeline_variables: createTimelineVariables(current_block),
     sample: {
         type: 'fixed-repetitions',
-        size: 1
+        size: 5
     },
     randomize_order: true
 };
