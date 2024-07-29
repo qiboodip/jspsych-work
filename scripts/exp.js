@@ -40,7 +40,10 @@ let subject_info = {
 // 进入全屏
 let enter_fullscreen = {
     type: jsPsychFullscreen,
-    fullscreen_mode: true
+    fullscreen_mode: true,
+    message:"<p>点击按钮进入全屏</p>",
+    button_label: '开始实验',
+    delay_after: 100
 };
 var exit_fullscreen = {
     type: jsPsychFullscreen,
